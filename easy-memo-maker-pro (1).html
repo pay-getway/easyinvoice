@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Easy Invoice BD</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap');
+:root{
+  --accent:#087a50;
+  --accent2:#0fb47f;
+  --ink:#172033;
+  --paper:#fff;
+  --bg:#edf2f7;
+  --line:#d7dee8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Noto Sans Bengali","SolaimanLipi","Kalpurush","Segoe UI",Arial,sans-serif;
+  background:var(--bg);color:var(--ink);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  background:linear-gradient(135deg,#075c46,var(--accent2));
+  color:#fff;padding:12px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 18px #0002;
+}
+.brand{font-weight:900;font-size:20px}
+.brand small{display:block;font-size:11px;font-weight:500;opacity:.85}
+.container{max-width:1500px;margin:14px auto;padding:0 12px}
+.layout{display:grid;grid-template-columns:400px minmax(0,1fr);gap:15px}
+.panel{background:#fff;border:1px solid #dbe3ec;border-radius:15px;box-shadow:0 5px 22px #1720330c}
+.form-panel{padding:16px}
+h2{margin:0 0 14px;font-size:24px}
+.section{border-top:1px dashed #d8e0ea;padding-top:13px;margin-top:14px}
+.section-title{font-size:15px;font-weight:900;margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+label{display:block;font-size:12px;font-weight:800;margin:7px 0 4px;color:#4d5b70}
+input,select,textarea{
+  width:100%;border:1px solid #ccd6e3;background:#fbfcfe;
+  border-radius:9px;padding:9px 10px;outline:none;transition:.18s
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--accent2);box-shadow:0 0 0 3px #10b98118
+}
+input[type="color"]{height:40px;padding:3px}
+textarea{resize:vertical;min-height:62px}
+.logo-row{display:flex;gap:8px;align-items:center}
+.logo-preview{
+  width:52px;height:52px;border:1px dashed #bbc7d5;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;background:#f7f9fb;flex:none
+}
+.logo-preview img{width:100%;height:100%;object-fit:contain}
+.items-head,.item-row{display:grid;grid-template-columns:1fr 52px 78px 78px 32px;gap:5px;align-items:center}
+.items-head{font-size:10px;color:#758196;margin-bottom:5px}
+.item-row{margin-bottom:6px}
+.item-row input{padding:8px;font-size:12px}
+.remove{border:0;background:#fee2e2;color:#ef4444;width:30px;height:31px;border-radius:8px;font-weight:900}
+.add-btn{border:1px dashed var(--accent2);color:#078658;background:#ecfdf5;border-radius:8px;padding:9px;width:100%;margin-top:4px}
+.design-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.design-chip{
+  border:1px solid #d6dee8;background:#fff;border-radius:9px;padding:9px 8px;
+  text-align:left;font-size:11px;transition:.15s
+}
+.design-chip:hover,.design-chip.active{border-color:var(--accent2);background:#effcf7}
+.size-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.color-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.color-card{border:1px solid #d8e0e9;border-radius:9px;padding:7px}
+.color-card label{margin:0 0 4px}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:15px}
+.btn{border:0;border-radius:9px;padding:10px;font-weight:800;transition:.15s}
+.btn:hover{transform:translateY(-1px)}
+.save{background:#2563eb;color:#fff}.print{background:#111827;color:#fff}
+.whatsapp{background:#16a34a;color:#fff}.reset{background:#fee2e2;color:#dc2626}
+.download{background:#7c3aed;color:#fff}
+.preview-panel{background:#e7edf4;min-height:850px;overflow:hidden}
+.preview-tools{
+  padding:10px 13px;background:#f7f9fc;border-bottom:1px solid #dce3eb;
+  display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap
+}
+.preview-tools label{margin:0}
+.preview-tools select{width:auto;min-width:220px;background:#fff}
+.paper-area{padding:25px;overflow:auto}
+.paper{
+  background:var(--paper);width:794px;min-height:1123px;margin:auto;padding:42px;
+  box-shadow:0 4px 18px #0002;position:relative;color:#18212f;
+  --accent-local:var(--accent)
+}
+.paper.compact{width:520px;min-height:740px;padding:30px}
+.paper.thermal{
+  width:302px;min-height:620px;padding:17px 14px 72px;font-size:12px;
+  font-family:"Noto Sans Bengali","SolaimanLipi","Kalpurush",Arial,sans-serif;
+  border-radius:3px;
+}
+.paper.thermal .watermark{
+  width:175px;height:175px;top:47%;opacity:.07;
+}
+.paper.thermal .default-watermark{
+  width:190px;height:190px;top:47%;font-size:34px;opacity:.045;
+}
+.paper.thermal .memo-header{
+  display:block;text-align:center;border-bottom:1px dashed #777;padding-bottom:10px;
+  position:relative;
+}
+.paper.thermal .memo-header:before,
+.paper.thermal .memo-header:after{
+  content:"✦";color:var(--accent);font-size:10px;position:absolute;bottom:-7px;background:#fff;padding:0 5px
+}
+.paper.thermal .memo-header:before{left:0}
+.paper.thermal .memo-header:after{right:0}
+.paper.thermal .shop{display:block}
+.paper.thermal .shop-logo{margin:0 auto 5px;width:58px;height:58px;border-radius:50%}
+.paper.thermal .shop-name{font-size:19px;letter-spacing:.2px}
+.paper.thermal .shop-info{font-size:9px;line-height:1.5}
+.paper.thermal .invoice-title{text-align:center;margin-top:7px}
+.paper.thermal .invoice-title h1{font-size:17px;letter-spacing:1px}
+.paper.thermal .invoice-title small{font-size:9px}
+.paper.thermal .customer{
+  margin-top:10px;padding:7px 0;background:transparent;border-bottom:1px dashed #777;
+  border-radius:0;display:block;text-align:left
+}
+.paper.thermal .customer strong{font-size:11px}
+.paper.thermal table{margin-top:8px}
+.paper.thermal th{background:transparent!important;color:inherit;border-top:1px dashed #777;border-bottom:1px dashed #777}
+.paper.thermal th,.paper.thermal td{padding:5px 2px;border-left:0;border-right:0;font-size:9.5px}
+.paper.thermal .totals{width:100%;margin-top:8px}
+.paper.thermal .total-line{padding:3px 0;font-size:10px}
+.paper.thermal .grand{
+  background:var(--accent);color:#fff;border-radius:5px;padding:6px 7px;
+  font-size:13px;margin:3px 0
+}
+.paper.thermal .due{font-size:11px}
+.paper.thermal .note{
+  margin-top:11px;text-align:center;border-top:1px dashed #777;padding-top:8px;font-size:9px
+}
+.paper.thermal .footer{
+  position:absolute;left:14px;right:14px;bottom:15px;margin:0;padding-top:8px;
+  border-top:1px dashed #777;text-align:center;display:block;font-size:8.5px
+}
+.paper.thermal .footer span{display:block;margin:2px 0}
+.watermark{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:320px;height:320px;object-fit:contain;opacity:.075;z-index:0;
+  pointer-events:none;filter:grayscale(1);
+}
+.paper > *:not(.watermark){position:relative;z-index:1}
+.default-watermark{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:280px;height:280px;border:8px solid var(--accent);border-radius:50%;
+  opacity:.045;display:flex;align-items:center;justify-content:center;
+  font-weight:900;color:var(--accent);font-size:42px;letter-spacing:-2px;
+  text-align:center;line-height:1;z-index:0;pointer-events:none;
+}
+.default-watermark span{font-size:15px;display:block;letter-spacing:1px;margin-top:7px}
+.paper.thermal .memo-header{display:block;text-align:center}
+.paper.thermal .invoice-title{text-align:center;margin-top:8px}
+.paper.thermal .shop{justify-content:center}
+.paper.classic{font-family:Georgia,"Noto Sans Bengali",serif}
+.paper.modern{
+  border-top:7px solid var(--accent);
+  border-radius:0 0 14px 14px;
+}
+.paper.modern .memo-header{
+  border-bottom:0;background:linear-gradient(135deg,#f1faf6,#fff);
+  padding:14px;border-radius:10px;margin-bottom:10px;
+}
+.paper.modern table{border-collapse:separate;border-spacing:0 4px}
+.paper.modern th{border:0;background:var(--accent)!important;color:#fff}
+.paper.modern td{border-top:1px solid #e4e9ef;border-bottom:1px solid #e4e9ef}
+.paper.modern td:first-child{border-left:1px solid #e4e9ef;border-radius:7px 0 0 7px}
+.paper.modern td:last-child{border-right:1px solid #e4e9ef;border-radius:0 7px 7px 0}
+.paper.elegant{
+  border:1px solid var(--accent);border-radius:10px;
+  box-shadow:inset 0 0 0 5px #ffffff,inset 0 0 0 6px var(--accent),0 4px 18px #0002;
+}
+.paper.elegant .memo-header{border-bottom:1px double var(--accent)}
+.paper.darkhead .memo-header{background:var(--accent);color:#fff;padding:12px;border-radius:7px;border-bottom:0}
+.paper.darkhead .shop-info{color:#eef}
+.paper.darkhead .invoice-title h1{color:#fff}
+.memo-header{
+  display:flex;justify-content:space-between;gap:20px;
+  border-bottom:2px solid var(--accent);padding-bottom:13px
+}
+.shop{display:flex;gap:12px;align-items:flex-start}
+.shop-logo{width:70px;height:70px;object-fit:contain;border-radius:8px}
+.shop-name{font-size:24px;font-weight:900}
+.shop-info{color:#697386;font-size:11px;line-height:1.6}
+.invoice-title{text-align:right}.invoice-title h1{margin:0;color:var(--accent);font-size:25px}
+.invoice-title small{color:#667085}
+.customer{
+  margin-top:18px;background:#f1f6f3;border-radius:8px;padding:10px 13px;
+  display:flex;justify-content:space-between;gap:15px
+}
+.customer strong{display:block}
+table{width:100%;border-collapse:collapse;margin-top:18px}
+th{background:#dcebe3;color:#075d42;font-size:12px;text-align:left}
+th,td{border:1px solid #d6dde5;padding:8px}
+td{font-size:12px}.right{text-align:right}
+.totals{margin-left:auto;margin-top:16px;width:300px}
+.total-line{display:flex;justify-content:space-between;padding:5px 0}
+.grand{background:var(--accent);color:#fff;padding:9px;border-radius:4px;font-size:17px;font-weight:900}
+.due{color:#e11d48;font-weight:bold}
+.note{margin-top:35px;font-size:12px}
+.footer{
+  position:absolute;bottom:25px;left:42px;right:42px;border-top:1px dashed #aeb8c5;
+  padding-top:10px;display:flex;justify-content:space-between;font-size:10px;color:#697386;
+  text-align:center
+}
+.footer span:last-child{font-weight:700;color:var(--accent)}
+.bottom-section{position:absolute;left:42px;right:42px;bottom:22px;border-top:1px dashed #aeb8c5;padding-top:9px;z-index:2}
+.bottom-main{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;min-height:38px}
+.bottom-note{flex:1;min-width:0;font-size:10px;color:#4b5563;line-height:1.45;word-break:break-word}
+.signature-box{width:180px;text-align:center;font-size:9px;color:#697386;flex:none}
+.signature-line{border-top:1px solid #263238;width:100%;margin-bottom:5px}
+.thank-you{text-align:center;margin-top:8px;font-size:10px;font-weight:800;color:var(--accent)}
+.note-hidden,.signature-hidden{display:none!important}
+.paper.thermal .bottom-section{left:14px;right:14px;bottom:13px;padding-top:7px}
+.paper.thermal .bottom-main{gap:7px;min-height:31px}
+.paper.thermal .bottom-note{font-size:8px}
+.paper.thermal .signature-box{width:92px;font-size:7px}
+.paper.thermal .thank-you{font-size:8px;margin-top:5px}
+
+.thermal .footer{position:static;margin-top:35px;display:block;text-align:center}
+.empty{text-align:center;color:#9aa5b4;padding:20px}
+.bn-label{display:inline}
+.en-label{display:inline}
+.bilingual-off .bn-label{display:none}
+.bilingual-off .en-label{display:inline}
+.toast{
+  position:fixed;right:18px;bottom:18px;background:#111827;color:#fff;padding:11px 15px;
+  border-radius:10px;opacity:0;transform:translateY(12px);pointer-events:none;transition:.2s;z-index:50
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.mobile-note{display:none;font-size:11px;color:#667085;margin-top:8px}
+@media(max-width:980px){
+  .layout{grid-template-columns:1fr}
+  .preview-panel{min-height:auto}
+  .paper-area{padding:14px}
+}
+@media(max-width:600px){
+  .topbar{padding:10px 12px}.brand{font-size:17px}
+  .container{padding:0 7px}.form-panel{padding:12px}
+  .grid2{grid-template-columns:1fr}.design-grid{grid-template-columns:1fr 1fr}
+  .preview-tools{justify-content:stretch}.preview-tools select{width:100%}
+  .paper-area{padding:8px}
+  .paper{
+    width:100%!important;min-height:0!important;padding:20px!important;
+    box-shadow:0 2px 10px #0002
+  }
+  .paper .footer{display:none}
+  .paper .bottom-section{left:20px;right:20px;bottom:14px}
+  .paper .signature-box{width:135px}
+  .memo-header{gap:10px}.shop-name{font-size:18px}
+  .shop-logo{width:52px;height:52px}.invoice-title h1{font-size:20px}
+  .totals{width:100%}
+  th,td{padding:6px;font-size:10px}
+  .mobile-note{display:block}
+}
+@media print{
+  body{background:#fff}
+  .topbar,.form-panel,.preview-tools,.mobile-note{display:none!important}
+  .container{margin:0;padding:0}.layout{display:block}
+  .preview-panel{background:#fff;overflow:visible}
+  .paper-area{padding:0;overflow:visible}
+  .paper{box-shadow:none;margin:0;max-width:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">🧾 Easy Invoice BD
+    <small>ছোট দোকানের জন্য দ্রুত Cash Memo / Invoice</small>
+  </div>
+</header>
+
+<div class="container">
+<div class="layout">
+
+<div class="panel form-panel">
+<h2>📝 মেমো তৈরি করুন</h2>
+
+<div class="section-title">🏪 দোকানের তথ্য</div>
+<label>দোকানের নাম</label><input id="shopName" value="Easy Invoice BD">
+<div class="grid2">
+  <div><label>মোবাইল</label><input id="shopPhone" placeholder="01XXXXXXXXX"></div>
+  <div><label>Email</label><input id="shopEmail" placeholder="shop@email.com"></div>
+</div>
+<label>ঠিকানা</label><input id="shopAddress" placeholder="দোকানের ঠিকানা">
+<label>Logo (Optional)</label>
+<div class="logo-row">
+  <div class="logo-preview"><img id="logoPreview" style="display:none"><span id="logoText">Logo</span></div>
+  <input type="file" id="logoInput" accept="image/*">
+</div>
+<div class="grid2" style="margin-top:7px">
+  <label style="display:flex;align-items:center;gap:7px;margin:0">
+    <input id="showWatermark" type="checkbox" checked style="width:auto">
+    মাঝখানে Watermark logo
+  </label>
+  <label style="display:flex;align-items:center;gap:7px;margin:0">
+    <input id="bilingual" type="checkbox" checked style="width:auto">
+    বাংলা + English
+  </label>
+</div>
+
+<div class="section">
+<div class="section-title">🎨 মেমো Design</div>
+<div class="design-grid">
+  <button class="design-chip active" data-design="a4">🇬🇧 English A4</button>
+  <button class="design-chip" data-design="compact">🧾 Compact 5.5×8"</button>
+  <button class="design-chip" data-design="classic">🇧🇩 Classic Bengali</button>
+  <button class="design-chip" data-design="modern">✨ Modern Minimal</button>
+  <button class="design-chip" data-design="thermal">🖨️ Thermal 80mm Receipt</button>
+  <button class="design-chip" data-design="elegant">💎 Elegant Border</button>
+  <button class="design-chip" data-design="darkhead">🟢 Color Header</button>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">📏 Size</div>
+<div class="size-row">
+  <div><label>Paper Size</label>
+    <select id="paperSize">
+      <option value="a4">A4 — 210×297mm</option>
+      <option value="compact">Compact — 5.5×8 inch</option>
+      <option value="thermal">Thermal — 80mm</option>
+      <option value="a5">A5 — 148×210mm</option>
+      <option value="receipt58">Receipt — 58mm</option>
+    </select>
+  </div>
+  <div><label>Orientation</label>
+    <select id="orientation">
+      <option value="portrait">Portrait</option>
+      <option value="landscape">Landscape</option>
+    </select>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">🎨 Color</div>
+<div class="color-row">
+  <div class="color-card"><label>Primary</label><input id="primaryColor" type="color" value="#087a50"></div>
+  <div class="color-card"><label>Table</label><input id="tableColor" type="color" value="#dcebe3"></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">🧾 মেমো তথ্য</div>
+<div class="grid2">
+  <div><label>মেমো নম্বর</label><input id="invoiceNo" value="INV-0001"></div>
+  <div><label>তারিখ</label><input id="invoiceDate" type="date"></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">👤 কাস্টমার</div>
+<label>কাস্টমারের নাম</label><input id="customerName" placeholder="Customer Name">
+<div class="grid2">
+  <div><label>মোবাইল</label><input id="customerPhone" placeholder="01XXXXXXXXX"></div>
+  <div><label>ঠিকানা</label><input id="customerAddress" placeholder="Customer Address"></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">🛍️ আইটেম</div>
+<div class="items-head"><span>পণ্য</span><span>Qty</span><span>Price</span><span>Total</span><span></span></div>
+<div id="items"></div>
+<button class="add-btn" onclick="addItem()">＋ আইটেম যোগ করুন</button>
+</div>
+
+<div class="section">
+<div class="section-title">💰 হিসাব</div>
+<div class="grid2">
+  <div><label>Discount (৳)</label><input id="discount" type="number" value="0"></div>
+  <div><label>VAT (%)</label><input id="vat" type="number" value="0"></div>
+  <div><label>Paid (৳)</label><input id="paid" type="number" value="0"></div>
+  <div><label>Previous Due (৳)</label><input id="previousDue" type="number" value="0"></div>
+</div>
+<label>নোট</label><textarea id="note" placeholder="ধন্যবাদ! আবার আসবেন..."></textarea>
+<div class="grid2" style="margin-top:7px">
+<label style="display:flex;align-items:center;gap:7px;margin:0"><input id="showNote" type="checkbox" checked style="width:auto"> Note Show</label>
+<label style="display:flex;align-items:center;gap:7px;margin:0"><input id="showSignature" type="checkbox" checked style="width:auto"> Signature Show</label>
+</div>
+</div>
+
+<div class="actions">
+  <button class="btn save" onclick="saveMemo()">💾 Save</button>
+  <button class="btn download" onclick="downloadMemo()">⬇️ Download</button>
+  <button class="btn print" onclick="printMemo()">🖨️ Print / PDF</button>
+  <button class="btn whatsapp" onclick="sendWhatsApp()">🟢 WhatsApp</button>
+  <button class="btn reset" onclick="resetMemo()">🔄 Reset</button>
+</div>
+<div class="mobile-note">📱 মোবাইলেও পুরোপুরি ব্যবহার করা যাবে। Download করলে মেমোর একটি HTML কপি নামবে; Print / PDF দিয়ে PDF save করা যাবে।</div>
+</div>
+
+<div class="panel preview-panel">
+<div class="preview-tools">
+  <label>Quick Design:</label>
+  <select id="designSelect">
+    <option value="a4">English Invoice (A4)</option>
+    <option value="compact">Compact (5.5" × 8")</option>
+    <option value="classic">Classic Bengali</option>
+    <option value="modern">Modern Minimal</option>
+    <option value="thermal">Thermal (80mm)</option>
+    <option value="elegant">Elegant Border</option>
+    <option value="darkhead">Color Header</option>
+  </select>
+</div>
+
+<div class="paper-area">
+<div id="paper" class="paper">
+  <img id="watermarkLogo" class="watermark" style="display:none" alt="">
+  <div id="defaultWatermark" class="default-watermark">EI<span>EASY INVOICE BD</span></div>
+  <div class="memo-header">
+    <div class="shop">
+      <img id="previewLogo" class="shop-logo" style="display:none">
+      <div>
+        <div class="shop-name" id="pShopName">আপনার দোকানের নাম</div>
+        <div class="shop-info">
+          <div id="pShopPhone"></div>
+          <div id="pShopEmail"></div>
+          <div id="pShopAddress"></div>
+        </div>
+      </div>
+    </div>
+    <div class="invoice-title">
+      <h1><span id="invoiceTitleEn">INVOICE</span><span id="invoiceTitleBn"> / চালান</span></h1>
+      <small>#<span id="pInvoiceNo">INV-0001</span></small><br>
+      <small id="pDate"></small>
+    </div>
+  </div>
+
+  <div class="customer">
+    <div><small><span class="en-label">Customer</span><span class="bn-label"> / ক্রেতা</span></small><strong id="pCustomerName">Walk-in Customer</strong><div id="pCustomerAddress"></div></div>
+    <div class="right"><div id="pCustomerPhone"></div></div>
+  </div>
+
+  <table>
+    <thead><tr><th>#</th><th><span class="en-label">Item</span><span class="bn-label"> / পণ্য</span></th><th>Qty / পরিমাণ</th><th>Price / দাম</th><th class="right">Amount / মোট</th></tr></thead>
+    <tbody id="previewItems"></tbody>
+  </table>
+
+  <div class="totals">
+    <div class="total-line"><span><span class="en-label">Subtotal</span><span class="bn-label"> / উপ-মোট</span></span><strong>৳ <span id="pSubtotal">0.00</span></strong></div>
+    <div class="total-line"><span><span class="en-label">Discount</span><span class="bn-label"> / ছাড়</span></span><strong>- ৳ <span id="pDiscount">0.00</span></strong></div>
+    <div class="total-line"><span><span class="en-label">VAT</span><span class="bn-label"> / ভ্যাট</span></span><strong>৳ <span id="pVat">0.00</span></strong></div>
+    <div class="total-line grand"><span><span class="en-label">Grand Total</span><span class="bn-label"> / সর্বমোট</span></span><span>৳ <span id="pGrand">0.00</span></span></div>
+    <div class="total-line"><span><span class="en-label">Paid</span><span class="bn-label"> / জমা</span></span><strong>৳ <span id="pPaid">0.00</span></strong></div>
+    <div class="total-line due"><span><span class="en-label">Due</span><span class="bn-label"> / বাকি</span></span><span>৳ <span id="pDue">0.00</span></span></div>
+  </div>
+
+  <div class="bottom-section">
+    <div class="bottom-main">
+      <div id="previewNote" class="bottom-note"><strong><span class="en-label">Note</span><span class="bn-label"> / নোট</span>:</strong> <span id="pNote">ধন্যবাদ! আবার আসবেন...</span></div>
+      <div id="previewSignature" class="signature-box"><div class="signature-line"></div><span>Customer Signature / ক্রেতার স্বাক্ষর</span></div>
+    </div>
+    <div class="thank-you">Thank you / ধন্যবাদ ❤️</div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="toast" id="toast">Saved!</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let currentDesign="a4";
+let logoData="";
+let watermarkEnabled=true;
+let bilingualEnabled=true;
+
+$("invoiceDate").value=new Date().toISOString().split("T")[0];
+
+function addItem(name="",qty=1,price=0){
+  const row=document.createElement("div");
+  row.className="item-row";
+  row.innerHTML=`
+    <input class="item-name" placeholder="পণ্যের নাম" value="${escapeAttr(name)}">
+    <input class="item-qty" type="number" min="1" value="${qty}">
+    <input class="item-price" type="number" min="0" value="${price}">
+    <input class="item-total" type="text" value="0.00" readonly>
+    <button class="remove" title="Remove">×</button>`;
+  row.querySelector(".remove").onclick=()=>{row.remove();updatePreview()};
+  $("items").appendChild(row);
+  row.querySelectorAll("input").forEach(e=>e.addEventListener("input",updatePreview));
+  updatePreview();
+}
+addItem();
+
+document.querySelectorAll("input,textarea,select").forEach(el=>{
+  el.addEventListener("input",updatePreview);
+  el.addEventListener("change",updatePreview);
+});
+
+document.querySelectorAll(".design-chip").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    setDesign(btn.dataset.design);
+    $("designSelect").value=btn.dataset.design;
+  });
+});
+$("designSelect").addEventListener("change",e=>setDesign(e.target.value));
+
+function setDesign(design){
+  currentDesign=design;
+  document.querySelectorAll(".design-chip").forEach(b=>b.classList.toggle("active",b.dataset.design===design));
+  const p=$("paper");
+  p.className="paper";
+  if(["compact","thermal","classic","modern","elegant","darkhead"].includes(design))p.classList.add(design);
+  updatePaperSize();
+}
+
+function updatePaperSize(){
+  const size=$("paperSize").value, orientation=$("orientation").value, p=$("paper");
+  p.style.removeProperty("width");p.style.removeProperty("min-height");
+  if(size==="a4"){p.style.width=orientation==="landscape"?"1123px":"794px";p.style.minHeight=orientation==="landscape"?"794px":"1123px"}
+  if(size==="a5"){p.style.width=orientation==="landscape"?"794px":"559px";p.style.minHeight=orientation==="landscape"?"559px":"794px"}
+  if(size==="compact"){p.style.width="520px";p.style.minHeight="740px"}
+  if(size==="thermal"){p.style.width="302px";p.style.minHeight="500px"}
+  if(size==="receipt58"){p.style.width="220px";p.style.minHeight="420px"}
+  if(window.innerWidth<=600){p.style.width="100%";p.style.minHeight="0"}
+}
+$("paperSize").addEventListener("change",updatePaperSize);
+$("orientation").addEventListener("change",updatePaperSize);
+
+$("primaryColor").addEventListener("input",()=>{
+  document.documentElement.style.setProperty("--accent",$("primaryColor").value);
+  updatePreview();
+});
+$("tableColor").addEventListener("input",()=>{
+  const c=$("tableColor").value;
+  document.querySelectorAll("th").forEach(x=>x.style.background=c);
+});
+$("showWatermark").addEventListener("change",()=>{
+  watermarkEnabled=$("showWatermark").checked; updateWatermark();
+});
+$("bilingual").addEventListener("change",()=>{
+  bilingualEnabled=$("bilingual").checked;
+  $("paper").classList.toggle("bilingual-off",!bilingualEnabled);
+  updatePreview();
+});
+
+$("logoInput").addEventListener("change",function(){
+  const f=this.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    logoData=e.target.result;
+    $("logoPreview").src=logoData;$("logoPreview").style.display="block";$("logoText").style.display="none";
+    $("previewLogo").src=logoData;$("previewLogo").style.display="block";
+    updateWatermark();
+  };
+  r.readAsDataURL(f);
+});
+
+function updateWatermark(){
+  const img=$("watermarkLogo"), fallback=$("defaultWatermark");
+  if(!watermarkEnabled){img.style.display="none";fallback.style.display="none";return}
+  if(logoData){img.src=logoData;img.style.display="block";fallback.style.display="none"}
+  else {img.style.display="none";fallback.style.display="flex"}
+}
+function updateBottomVisibility(){
+  $("previewNote").classList.toggle("note-hidden",!$("showNote").checked);
+  $("previewSignature").classList.toggle("signature-hidden",!$("showSignature").checked);
+}
+function updatePreview(){
+  $("pShopName").textContent=$("shopName").value||"Easy Invoice BD";
+  $("invoiceTitleBn").style.display=bilingualEnabled?"inline":"none";
+  $("paper").classList.toggle("bilingual-off",!bilingualEnabled);
+  updateWatermark();
+  $("pShopPhone").textContent=$("shopPhone").value;
+  $("pShopEmail").textContent=$("shopEmail").value;
+  $("pShopAddress").textContent=$("shopAddress").value;
+  $("pInvoiceNo").textContent=$("invoiceNo").value||"INV-0001";
+  if($("invoiceDate").value){
+    const d=new Date($("invoiceDate").value+"T00:00:00");
+    $("pDate").textContent=d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+  }
+  $("pCustomerName").textContent=$("customerName").value||"Walk-in Customer";
+  $("pCustomerPhone").textContent=$("customerPhone").value;
+  $("pCustomerAddress").textContent=$("customerAddress").value;
+
+  let subtotal=0;const preview=$("previewItems");preview.innerHTML="";
+  document.querySelectorAll(".item-row").forEach((row,i)=>{
+    const name=row.querySelector(".item-name").value||"Item";
+    const qty=Number(row.querySelector(".item-qty").value)||0;
+    const price=Number(row.querySelector(".item-price").value)||0;
+    const total=qty*price;subtotal+=total;
+    row.querySelector(".item-total").value=total.toFixed(2);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${i+1}</td><td>${escapeHtml(name)}</td><td>${qty}</td><td>৳ ${price.toFixed(2)}</td><td class="right">৳ ${total.toFixed(2)}</td>`;
+    preview.appendChild(tr);
+  });
+  if(!preview.children.length)preview.innerHTML='<tr><td colspan="5" class="empty">No items</td></tr>';
+
+  const discount=Number($("discount").value)||0;
+  const vatRate=Number($("vat").value)||0;
+  const afterDiscount=Math.max(0,subtotal-discount);
+  const vat=afterDiscount*vatRate/100;
+  const grand=afterDiscount+vat;
+  const paid=Number($("paid").value)||0;
+  const previousDue=Number($("previousDue").value)||0;
+  const due=Math.max(0,grand+previousDue-paid);
+
+  $("pSubtotal").textContent=subtotal.toFixed(2);
+  $("pDiscount").textContent=discount.toFixed(2);
+  $("pVat").textContent=vat.toFixed(2);
+  $("pGrand").textContent=grand.toFixed(2);
+  $("pPaid").textContent=paid.toFixed(2);
+  $("pDue").textContent=due.toFixed(2);
+  $("pNote").textContent=$("note").value||"ধন্যবাদ! আবার আসবেন...";
+  updateBottomVisibility();
+  document.querySelectorAll("th").forEach(x=>x.style.background=$("tableColor").value);
+}
+
+function escapeHtml(t){const d=document.createElement("div");d.textContent=t;return d.innerHTML}
+function escapeAttr(t){return String(t).replace(/"/g,"&quot;")}
+
+function collectData(){
+  return {
+    shopName:$("shopName").value,shopPhone:$("shopPhone").value,shopEmail:$("shopEmail").value,
+    shopAddress:$("shopAddress").value,invoiceNo:$("invoiceNo").value,invoiceDate:$("invoiceDate").value,
+    customerName:$("customerName").value,customerPhone:$("customerPhone").value,customerAddress:$("customerAddress").value,
+    discount:$("discount").value,vat:$("vat").value,paid:$("paid").value,previousDue:$("previousDue").value,
+    note:$("note").value,design:currentDesign,paperSize:$("paperSize").value,orientation:$("orientation").value,
+    primaryColor:$("primaryColor").value,tableColor:$("tableColor").value,logo:logoData,
+    showWatermark:$("showWatermark").checked,bilingual:$("bilingual").checked,
+    showNote:$("showNote").checked,showSignature:$("showSignature").checked,
+    items:[...document.querySelectorAll(".item-row")].map(r=>({
+      name:r.querySelector(".item-name").value,qty:r.querySelector(".item-qty").value,price:r.querySelector(".item-price").value
+    }))
+  };
+}
+
+function saveMemo(){
+  localStorage.setItem("easyMemoPro",JSON.stringify(collectData()));
+  showToast("💾 Memo saved in this device");
+}
+
+function loadMemo(){
+  const s=localStorage.getItem("easyMemoPro");if(!s)return;
+  try{
+    const d=JSON.parse(s);
+    const ids=["shopName","shopPhone","shopEmail","shopAddress","invoiceNo","invoiceDate","customerName","customerPhone","customerAddress","discount","vat","paid","previousDue","note","paperSize","orientation","primaryColor","tableColor"];
+    ids.forEach(id=>{if(d[id]!==undefined)$(id).value=d[id]});
+    if(d.logo){
+      logoData=d.logo;$("logoPreview").src=d.logo;$("logoPreview").style.display="block";$("logoText").style.display="none";
+      $("previewLogo").src=d.logo;$("previewLogo").style.display="block";
+    }
+    if(d.showWatermark!==undefined){$("showWatermark").checked=d.showWatermark;watermarkEnabled=d.showWatermark}
+    if(d.bilingual!==undefined){$("bilingual").checked=d.bilingual;bilingualEnabled=d.bilingual}
+    if(d.showNote!==undefined)$("showNote").checked=d.showNote;
+    if(d.showSignature!==undefined)$("showSignature").checked=d.showSignature;
+    if(d.design){currentDesign=d.design;$("designSelect").value=d.design;setDesign(d.design)}
+    $("items").innerHTML="";(d.items||[]).forEach(x=>addItem(x.name,x.qty,x.price));
+    updatePaperSize();updatePreview();
+  }catch(e){}
+}
+
+function resetMemo(){if(confirm("সব তথ্য মুছে ফেলবেন?")){localStorage.removeItem("easyMemoPro");location.reload()}}
+
+function printMemo(){
+  updatePreview();
+  window.print();
+}
+
+function downloadMemo(){
+  updatePreview();
+  const paper=$("paper").cloneNode(true);
+  paper.style.margin="0";
+  paper.style.maxWidth="none";
+  const css=document.querySelector("style").innerHTML;
+  const html=`<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml($("invoiceNo").value||"Memo")}</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap');${css}body{background:#fff}.paper{box-shadow:none;margin:0!important}</style></head><body><div class="paper">${paper.innerHTML}</div></body></html>`;
+  const blob=new Blob([html],{type:"text/html;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=($("invoiceNo").value||"memo")+".html";a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  showToast("⬇️ Memo downloaded");
+}
+
+function sendWhatsApp(){
+  const msg=`Hello ${$("customerName").value||"Customer"},%0A%0AInvoice: ${$("invoiceNo").value}%0ATotal: ৳${$("pGrand").textContent}%0ADue: ৳${$("pDue").textContent}%0A%0AThank you ❤️`;
+  window.open("https://wa.me/?text="+msg,"_blank");
+}
+
+function showToast(m){
+  const t=$("toast");t.textContent=m;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+loadMemo();updatePaperSize();$("paper").classList.toggle("bilingual-off",!bilingualEnabled);updateWatermark();updateBottomVisibility();updatePreview();
+</script>
+</body>
+</html>
